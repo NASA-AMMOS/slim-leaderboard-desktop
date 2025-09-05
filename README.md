@@ -1,35 +1,35 @@
-# SLIM Leaderboard Web Interface
+# SLIM Leaderboard Desktop
 
-A professional web interface for analyzing GitHub repositories and organizations using the SLIM Best Practices Leaderboard tool.
-
-🌐 **Live Demo:** https://nasa-ammos.github.io/slim-leaderboard-web/
+A cross-platform desktop application for analyzing GitHub repositories and organizations using the SLIM Best Practices Leaderboard tool.
 
 [![SLIM](https://img.shields.io/badge/Best%20Practices%20from-SLIM-blue)](https://nasa-ammos.github.io/slim/)
 
 ## Description
 
-This web application provides an intuitive interface for running SLIM (Software Lifecycle Improvement & Modernization) best practices analysis on GitHub repositories and organizations. It features:
+This desktop application provides a native interface for running SLIM (Software Lifecycle Improvement & Modernization) best practices analysis on GitHub repositories and organizations. It features:
 
+- 🖥️ Native desktop app for macOS, Windows, and Linux
+- 🔒 Secure local token storage
 - 🎯 Single repository or entire organization analysis
-- 🎨 Professional black and white theme
 - 📊 Multiple output formats (Table, Tree, Markdown, Plain)
 - ⚡ Real-time progress indicators
-- 🔐 Secure token handling
-- 🚀 Easy deployment options
+- 💾 Export analysis results
+- 🎨 Professional black and white theme
 
 ## Links
 
-[Website](https://nasa-ammos.github.io/slim-leaderboard-web/) | [SLIM Documentation](https://nasa-ammos.github.io/slim/) | [Issue Tracker](https://github.com/NASA-AMMOS/slim-leaderboard-web/issues) | [SLIM Leaderboard Core](https://github.com/NASA-AMMOS/slim-leaderboard)
+[Releases](https://github.com/NASA-AMMOS/slim-leaderboard-desktop/releases) | [SLIM Documentation](https://nasa-ammos.github.io/slim/) | [Issue Tracker](https://github.com/NASA-AMMOS/slim-leaderboard-desktop/issues) | [SLIM Leaderboard Core](https://github.com/NASA-AMMOS/slim-leaderboard)
 
 ## Features
 
+* **Native Desktop App** - Runs natively on macOS, Windows, and Linux
+* **Secure Token Storage** - GitHub tokens encrypted and stored locally
 * **Repository Analysis** - Analyze individual GitHub repositories for SLIM compliance
 * **Organization Scanning** - Scan all repositories in a GitHub organization
 * **Multiple Output Formats** - Table, Tree, Markdown, and Plain text formats
+* **Export Results** - Save analysis results to file
 * **Progress Tracking** - Real-time progress indicators during analysis
-* **Token Flexibility** - Use server token or provide your own for higher rate limits
 * **Professional UI** - Clean, minimalist black and white design
-* **Responsive Design** - Works on desktop and mobile devices
 
 ## Contents
 
@@ -46,8 +46,8 @@ This guide provides a quick way to get started with our project. Please see our 
 
 ### Requirements
 
-* Python 3.11 or higher
-* pip (Python package manager)
+* Node.js 18 or higher (for development)
+* Python 3.8 or higher (for SLIM analysis)
 * Git (for submodules)
 * GitHub Personal Access Token (for API access)
 
@@ -55,98 +55,90 @@ This guide provides a quick way to get started with our project. Please see our 
 
 1. **Clone the repository with submodules:**
    ```bash
-   git clone --recursive https://github.com/NASA-AMMOS/slim-leaderboard-web.git
-   cd slim-leaderboard-web
+   git clone --recursive https://github.com/NASA-AMMOS/slim-leaderboard-desktop.git
+   cd slim-leaderboard-desktop
    ```
 
-2. **Install Python dependencies:**
+2. **Install Node.js dependencies:**
    ```bash
-   pip install -r requirements.txt
+   npm install
    ```
 
-3. **Install SLIM Leaderboard:**
+3. **Install Python dependencies for SLIM:**
    ```bash
    cd slim-leaderboard
    pip install -e .
    cd ..
    ```
 
-4. **Set your GitHub token (recommended):**
-   ```bash
-   export GITHUB_TOKEN="your_github_token_here"
-   ```
-   
-   This allows the server to handle analysis without requiring users to provide tokens.
-
 ### Run Instructions
 
-#### Option 1: Direct Python
+#### Development Mode
 ```bash
-export GITHUB_TOKEN="your_token_here"  # Optional but recommended
-python app.py
+npm run dev
 ```
 
-#### Option 2: Using the production script
+#### Production Mode
 ```bash
-export GITHUB_TOKEN="your_token_here"  # Optional but recommended
-bash run_production.sh
+npm start
 ```
 
-#### Option 3: Using Docker
+#### Build Executable
 ```bash
-export GITHUB_TOKEN="your_token_here"
-docker-compose up
-```
+# For current platform
+npm run build
 
-The application will be available at http://localhost:8081
+# For specific platforms
+npm run build:mac    # macOS
+npm run build:win    # Windows
+npm run build:linux  # Linux
+```
 
 ### Usage Examples
 
-1. **Analyze a single repository:**
+1. **First Launch:**
+   - Enter your GitHub Personal Access Token
+   - Token is securely stored locally
+   - Generate token at: https://github.com/settings/tokens
+
+2. **Analyze a single repository:**
    - Select "Single Repository" from the dropdown
    - Enter repository URL: `https://github.com/NASA-AMMOS/slim-detect-secrets`
    - Choose output format (e.g., Table)
    - Click "Analyze"
 
-2. **Analyze an entire organization:**
+3. **Analyze an entire organization:**
    - Select "Entire Organization" from the dropdown  
    - Enter organization URL: `https://github.com/nasa-ammos`
    - Choose output format and options
    - Click "Analyze"
 
-3. **Using your own token (for higher rate limits):**
-   - Enter your GitHub Personal Access Token in the optional field
-   - This overrides the server's token for your analysis
+4. **Export results:**
+   - After analysis completes, click "Export" to save results
 
-### Docker Build Instructions
+### Download Pre-built Binaries
 
-1. **Build the Docker image:**
+Download the latest release for your platform from the [Releases page](https://github.com/NASA-AMMOS/slim-leaderboard-desktop/releases):
+
+- **macOS**: `SLIM-Leaderboard-1.0.0.dmg`
+- **Windows**: `SLIM-Leaderboard-Setup-1.0.0.exe`  
+- **Linux**: `SLIM-Leaderboard-1.0.0.AppImage`
+
+### Development & Testing
+
+1. **Run in development mode with DevTools:**
    ```bash
-   docker build -t slim-leaderboard-web .
+   npm run dev
    ```
 
-2. **Run the container:**
+2. **Run tests:**
    ```bash
-   docker run -p 8081:8081 -e GITHUB_TOKEN="your_token" slim-leaderboard-web
+   npm test
    ```
 
-### Test Instructions
-
-1. **Test the API endpoint:**
-   ```bash
-   curl -X POST http://localhost:8081/api/analyze \
-     -H "Content-Type: application/json" \
-     -d '{
-       "repository_url": "https://github.com/NASA-AMMOS/slim-detect-secrets",
-       "target_type": "repository",
-       "output_format": "TABLE"
-     }'
-   ```
-
-2. **Test the health check:**
-   ```bash
-   curl http://localhost:8081/api/health
-   ```
+3. **Check Python integration:**
+   - Open Settings in the app
+   - Check Python status indicator
 
 ## Changelog
 

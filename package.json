@@ -1,0 +1,89 @@
+{
+  "name": "slim-leaderboard-desktop",
+  "version": "1.0.0",
+  "description": "SLIM Leaderboard Desktop Application - Analyze GitHub repositories for SLIM best practices compliance",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NASA-AMMOS/slim-leaderboard-desktop.git"
+  },
+  "homepage": "https://github.com/NASA-AMMOS/slim-leaderboard-desktop",
+  "bugs": {
+    "url": "https://github.com/NASA-AMMOS/slim-leaderboard-desktop/issues"
+  },
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "dist": "electron-builder --publish=never",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "keywords": [
+    "SLIM",
+    "NASA",
+    "AMMOS",
+    "GitHub",
+    "analysis",
+    "best-practices"
+  ],
+  "author": "NASA-AMMOS",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "electron": "^27.1.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "python-shell": "^5.0.0"
+  },
+  "build": {
+    "appId": "gov.nasa.ammos.slim-leaderboard",
+    "productName": "SLIM Leaderboard",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "renderer/**/*",
+      "slim-leaderboard/**/*",
+      "!slim-leaderboard/.git",
+      "!slim-leaderboard/examples",
+      "requirements.txt"
+    ],
+    "extraResources": [
+      {
+        "from": "slim-leaderboard",
+        "to": "slim-leaderboard"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "icon": "assets/icon.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "assets/icon.png",
+      "category": "Development"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
