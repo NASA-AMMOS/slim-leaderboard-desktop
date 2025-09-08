@@ -42,16 +42,27 @@ This desktop application provides a native interface for running SLIM (Software 
 
 ## Quick Start
 
-This guide provides a quick way to get started with our project. Please see our [docs]([INSERT LINK TO DOCS SITE / WIKI HERE]) for a more comprehensive overview.
+This guide provides a quick way to get started with the SLIM Leaderboard Desktop application.
 
 ### Requirements
 
-* Node.js 18 or higher (for development)
-* Python 3.8 or higher (for SLIM analysis)
-* Git (for submodules)
+* Python 3.8 or higher (required for SLIM analysis)
 * GitHub Personal Access Token (for API access)
+* For development:
+  * Node.js 18 or higher
+  * Git (for submodules)
 
-### Setup Instructions
+### Installation
+
+#### Option 1: Download Pre-built Application (Recommended)
+
+Download the latest release for your platform from the [Releases page](https://github.com/NASA-AMMOS/slim-leaderboard-desktop/releases):
+
+- **macOS**: `SLIM-Leaderboard-[version].dmg`
+- **Windows**: `SLIM-Leaderboard-Setup-[version].exe`  
+- **Linux**: `SLIM-Leaderboard-[version].AppImage`
+
+#### Option 2: Build from Source
 
 1. **Clone the repository with submodules:**
    ```bash
@@ -71,19 +82,22 @@ This guide provides a quick way to get started with our project. Please see our 
    cd ..
    ```
 
-### Run Instructions
+### Running the Application
 
-#### Development Mode
+#### From Pre-built Binary
+1. Double-click the downloaded application
+2. Follow the first-time setup to configure your GitHub token
+
+#### From Source (Development)
 ```bash
+# Development mode with DevTools
 npm run dev
-```
 
-#### Production Mode
-```bash
+# Production mode
 npm start
 ```
 
-#### Build Executable
+#### Building Executables
 ```bash
 # For current platform
 npm run build
@@ -116,97 +130,59 @@ npm run build:linux  # Linux
 4. **Export results:**
    - After analysis completes, click "Export" to save results
 
-### Download Pre-built Binaries
 
-Download the latest release for your platform from the [Releases page](https://github.com/NASA-AMMOS/slim-leaderboard-desktop/releases):
+### Troubleshooting
 
-- **macOS**: `SLIM-Leaderboard-1.0.0.dmg`
-- **Windows**: `SLIM-Leaderboard-Setup-1.0.0.exe`  
-- **Linux**: `SLIM-Leaderboard-1.0.0.AppImage`
+1. **Python Not Found:**
+   - Ensure Python 3.8+ is installed and in your PATH
+   - Check Python status in the app's Settings
 
-### Development & Testing
+2. **Analysis Fails:**
+   - Verify your GitHub token has the necessary permissions (repo scope)
+   - Check your network connection
+   - Ensure the target repository/organization exists and is accessible
 
-1. **Run in development mode with DevTools:**
-   ```bash
-   npm run dev
-   ```
-
-2. **Run tests:**
-   ```bash
-   npm test
-   ```
-
-3. **Check Python integration:**
-   - Open Settings in the app
-   - Check Python status indicator
+3. **Build Issues:**
+   - Clear node_modules and reinstall: `rm -rf node_modules && npm install`
+   - Ensure submodules are initialized: `git submodule update --init --recursive`
 
 ## Changelog
 
 See our [CHANGELOG.md](CHANGELOG.md) for a history of our changes.
 
-See our [releases page]([INSERT LINK TO YOUR RELEASES PAGE]) for our key versioned releases.
-
-<!-- ☝️ Replace with links to your changelog and releases page ☝️ -->
+See our [releases page](https://github.com/NASA-AMMOS/slim-leaderboard-desktop/releases) for our key versioned releases.
 
 ## Frequently Asked Questions (FAQ)
 
-[INSERT LINK TO FAQ PAGE OR PROVIDE FAQ INLINE HERE]
-<!-- example link to FAQ PAGE>
-Questions about our project? Please see our: [FAQ]([INSERT LINK TO FAQ / DISCUSSION BOARD])
--->
+**Q: Do I need to install Python separately?**
+A: Yes, Python 3.8 or higher must be installed on your system for the SLIM analysis to work.
 
-<!-- example FAQ inline format>
-1. Question 1
-   - Answer to question 1
-2. Question 2
-   - Answer to question 2
--->
+**Q: Is my GitHub token stored securely?**
+A: Yes, tokens are encrypted using your system's secure storage (keychain on macOS/Linux, DPAPI on Windows).
 
-<!-- example FAQ inline with no questions yet>
-No questions yet. Propose a question to be added here by reaching out to our contributors! See support section below.
--->
+**Q: Can I analyze private repositories?**
+A: Yes, as long as your GitHub token has the necessary permissions (repo scope) for those repositories.
 
-<!-- ☝️ Replace with a list of frequently asked questions from your project, or post a link to your FAQ on a discussion board ☝️ -->
+**Q: What's the difference between Single Repository and Entire Organization analysis?**
+A: Single Repository analyzes one specific repository, while Entire Organization scans all accessible repositories within a GitHub organization.
+
+**Q: Why is the analysis taking a long time?**
+A: Large organizations or repositories with extensive history may take longer to analyze. The app will show progress updates during the analysis.
 
 ## Contributing
 
-[INSERT LINK TO CONTRIBUTING GUIDE OR FILL INLINE HERE]
-<!-- example link to CONTRIBUTING.md>
 Interested in contributing to our project? Please see our: [CONTRIBUTING.md](CONTRIBUTING.md)
--->
 
-<!-- example inline contributing guide>
-1. Create an GitHub issue ticket describing what changes you need (e.g. issue-1)
-2. [Fork](INSERT LINK TO YOUR REPO FORK PAGE HERE, e.g. https://github.com/my_org/my_repo/fork) this repo
-3. Make your modifications in your own fork
-4. Make a pull-request in this repo with the code in your fork and tag the repo owner / largest contributor as a reviewer
-
-**Working on your first pull request?** See guide: [How to Contribute to an Open Source Project on GitHub](https://kcd.im/pull-request)
--->
-
-[INSERT LINK TO YOUR CODE_OF_CONDUCT.md OR SHARE TEXT HERE]
-<!-- example link to CODE_OF_CONDUCT.md>
 For guidance on how to interact with our team, please see our code of conduct located at: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
--->
 
-<!-- ☝️ Replace with a text describing how people may contribute to your project, or link to your contribution guide directly ☝️ -->
-
-[INSERT LINK TO YOUR GOVERNANCE.md OR SHARE TEXT HERE]
-<!-- example link to GOVERNANCE.md>
 For guidance on our governance approach, including decision-making process and our various roles, please see our governance model at: [GOVERNANCE.md](GOVERNANCE.md)
--->
 
 ## License
 
 See our: [LICENSE](LICENSE)
-<!-- ☝️ Replace with the text of your copyright and license, or directly link to your license file ☝️ -->
 
 ## Support
 
-[INSERT CONTACT INFORMATION OR PROFILE LINKS TO MAINTAINERS AMONG COMMITTER LIST]
-
-<!-- example list of contacts>
-Key points of contact are: [@github-user-1](link to github profile) [@github-user-2](link to github profile)
--->
-
-<!-- ☝️ Replace with the key individuals who should be contacted for questions ☝️ -->
+- **Issues & Bug Reports**: [GitHub Issues](https://github.com/NASA-AMMOS/slim-leaderboard-desktop/issues)
+- **SLIM Documentation**: [nasa-ammos.github.io/slim](https://nasa-ammos.github.io/slim/)
+- **Main Repository**: [github.com/NASA-AMMOS/slim-leaderboard-desktop](https://github.com/NASA-AMMOS/slim-leaderboard-desktop)
