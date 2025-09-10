@@ -97,16 +97,63 @@ npm run dev
 npm start
 ```
 
-#### Building Executables
-```bash
-# For current platform
-npm run build
+## Building the Desktop Application
 
-# For specific platforms
-npm run build:mac    # macOS
-npm run build:win    # Windows
-npm run build:linux  # Linux
-```
+### Build Requirements
+
+- **Node.js 18+** and npm
+- **Python 3.8+** (for bundled SLIM analysis)
+- **Platform-specific tools**:
+  - **macOS**: Xcode command line tools
+  - **Windows**: Windows SDK, Visual Studio Build Tools
+  - **Linux**: Standard build tools (build-essential)
+
+### Build Process
+
+1. **Prepare the build environment:**
+   ```bash
+   # Clone with submodules
+   git clone --recursive https://github.com/NASA-AMMOS/slim-leaderboard-desktop.git
+   cd slim-leaderboard-desktop
+   
+   # Install dependencies
+   npm install
+   
+   # Install Python SLIM dependencies
+   cd slim-leaderboard
+   pip install -e .
+   cd ..
+   ```
+
+2. **Build the application:**
+   ```bash
+   # Build for current platform only
+   npm run build
+   
+   # Build for specific platforms
+   npm run build:mac      # macOS (.dmg)
+   npm run build:win      # Windows (.exe installer)
+   npm run build:linux    # Linux (.AppImage + .deb)
+   ```
+
+3. **Output location:**
+   Built applications are saved in the `dist/` directory:
+   - macOS: `SLIM Leaderboard-[version].dmg`
+   - Windows: `SLIM Leaderboard Setup [version].exe`
+   - Linux: `SLIM Leaderboard-[version].AppImage` and `.deb`
+
+### Cross-Platform Building
+
+**Note**: Cross-platform building has limitations:
+- **macOS apps** can only be built on macOS (due to code signing)
+- **Windows and Linux** can be built from any platform
+
+### Build Configuration
+
+The build is configured via `electron-builder` in `package.json`:
+- App ID: `gov.nasa.ammos.slim-leaderboard`
+- Includes SLIM Python module as bundled resource
+- Platform-specific configurations for installers and app bundles
 
 ### Usage Examples
 
@@ -133,6 +180,7 @@ npm run build:linux  # Linux
 
 ### Troubleshooting
 
+#### Runtime Issues
 1. **Python Not Found:**
    - Ensure Python 3.8+ is installed and in your PATH
    - Check Python status in the app's Settings
@@ -142,9 +190,22 @@ npm run build:linux  # Linux
    - Check your network connection
    - Ensure the target repository/organization exists and is accessible
 
-3. **Build Issues:**
+#### Build Issues
+3. **Build Failures:**
    - Clear node_modules and reinstall: `rm -rf node_modules && npm install`
    - Ensure submodules are initialized: `git submodule update --init --recursive`
+   - On Windows: Install Visual Studio Build Tools or Visual Studio Community
+   - On macOS: Install Xcode command line tools: `xcode-select --install`
+   - On Linux: Install build essentials: `sudo apt-get install build-essential`
+
+4. **Code Signing (macOS):**
+   - For distribution, you'll need an Apple Developer account
+   - Set `CSC_LINK` and `CSC_KEY_PASSWORD` environment variables for code signing
+   - For local testing, builds work without code signing
+
+5. **Missing Python Dependencies:**
+   - Ensure the `slim-leaderboard` submodule is properly initialized
+   - Install SLIM dependencies: `cd slim-leaderboard && pip install -e .`
 
 ## Changelog
 

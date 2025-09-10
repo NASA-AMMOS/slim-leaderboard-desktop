@@ -39,8 +39,8 @@ Download the latest release for your platform:
 
 ```bash
 # Clone the repository with submodules
-git clone --recursive https://github.com/NASA-AMMOS/slim-leaderboard-web.git
-cd slim-leaderboard-web
+git clone --recursive https://github.com/NASA-AMMOS/slim-leaderboard-desktop.git
+cd slim-leaderboard-desktop
 
 # Install Node dependencies
 npm install
@@ -106,7 +106,7 @@ Built applications will be in the `dist` folder.
 ## Architecture
 
 ```
-slim-leaderboard-web/
+slim-leaderboard-desktop/
 ├── electron/           # Electron main process
 │   ├── main.js        # Main process & IPC handlers
 │   └── preload.js     # Secure context bridge
@@ -150,7 +150,7 @@ Apache License 2.0 - See [LICENSE](LICENSE) for details.
 
 ## Support
 
-- Issues: [GitHub Issues](https://github.com/NASA-AMMOS/slim-leaderboard-web/issues)
+- Issues: [GitHub Issues](https://github.com/NASA-AMMOS/slim-leaderboard-desktop/issues)
 - SLIM Documentation: [nasa-ammos.github.io/slim](https://nasa-ammos.github.io/slim/)
 
 ## Credits

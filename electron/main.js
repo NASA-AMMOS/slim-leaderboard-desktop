@@ -130,30 +130,17 @@ ipcMain.handle('run-analysis', async (event, options) => {
 
   // Build command arguments
   const args = [
-    '-m', 'jpl.slim.leaderboard',
+    configPath,
     '--output_format', outputFormat
   ];
 
   if (verbose) args.push('--verbose');
   if (emoji) args.push('--emoji');
   if (unsorted) args.push('--unsorted');
-  args.push(configPath);
 
   // Set up Python environment
   const pythonPath = getPythonPath();
   const slimPath = getSlimLeaderboardPath();
-
-  const options_python = {
-    mode: 'text',
-    pythonPath: pythonPath,
-    pythonOptions: ['-u'], // Unbuffered output
-    env: {
-      ...process.env,
-      GITHUB_TOKEN: token,
-      PYTHONPATH: slimPath
-    },
-    args: args
-  };
 
   return new Promise((resolve) => {
     let output = '';
@@ -162,7 +149,40 @@ ipcMain.handle('run-analysis', async (event, options) => {
     // Send progress updates
     event.sender.send('analysis-progress', { message: 'Starting analysis...' });
 
-    PythonShell.run(null, options_python, (err, results) => {
+    // Run Python with -m flag to execute module
+    const { spawn } = require('child_process');
+    const pythonArgs = [
+      '-u', // Unbuffered output
+      '-m', 'jpl.slim.leaderboard',
+      configPath,
+      '--output_format', outputFormat
+    ];
+    
+    if (verbose) pythonArgs.push('--verbose');
+    if (emoji) pythonArgs.push('--emoji');
+    if (unsorted) pythonArgs.push('--unsorted');
+
+    pythonProcess = spawn(pythonPath, pythonArgs, {
+      env: {
+        ...process.env,
+        GITHUB_TOKEN: token,
+        PYTHONPATH: slimPath
+      }
+    });
+
+    pythonProcess.stdout.on('data', (data) => {
+      const message = data.toString();
+      output += message;
+      event.sender.send('analysis-progress', { message: 'Analyzing...', data: message });
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+      const message = data.toString();
+      errorOutput += message;
+      console.error('Python stderr:', message);
+    });
+
+    pythonProcess.on('close', (code) => {
       // Clean up temp file
       try {
         fs.unlinkSync(configPath);
@@ -170,16 +190,14 @@ ipcMain.handle('run-analysis', async (event, options) => {
         // Ignore cleanup errors
       }
 
-      if (err) {
-        console.error('Python error:', err);
+      if (code !== 0) {
+        console.error('Python process exited with code:', code);
         resolve({
           success: false,
-          error: err.message || 'Analysis failed',
+          error: errorOutput || `Analysis failed with exit code ${code}`,
           output: errorOutput
         });
-      } else {
-        output = results ? results.join('\n') : '';
-        
+      } else if (output.trim()) {
         // Save last analysis
         store.set('lastAnalysis', {
           repositoryUrl,
@@ -196,23 +214,22 @@ ipcMain.handle('run-analysis', async (event, options) => {
           target_type: targetType,
           format: outputFormat
         });
+      } else {
+        resolve({
+          success: false,
+          error: 'No output received from analysis',
+          output: errorOutput
+        });
       }
     });
 
-    // Handle progress messages
-    pythonProcess = new PythonShell(null, options_python);
-    
-    pythonProcess.on('message', (message) => {
-      output += message + '\n';
-      event.sender.send('analysis-progress', { message: 'Analyzing...', data: message });
-    });
-
     pythonProcess.on('error', (err) => {
-      errorOutput += err.message + '\n';
-    });
-
-    pythonProcess.on('close', () => {
-      pythonProcess = null;
+      console.error('Failed to start Python process:', err);
+      resolve({
+        success: false,
+        error: `Failed to start Python: ${err.message}`,
+        output: ''
+      });
     });
   });
 });
@@ -274,7 +291,7 @@ function getPythonVersion(pythonPath) {
       { pythonPath },
       (err, results) => {
         if (err) reject(err);
-        else resolve(results[0]);
+        else resolve(results && results[0] ? results[0] : 'Unknown');
       }
     );
   });
@@ -291,7 +308,8 @@ ipcMain.handle('install-dependencies', async (event) => {
     const options = {
       mode: 'text',
       pythonPath: getPythonPath(),
-      args: ['-m', 'pip', 'install', '-r', requirementsPath]
+      pythonOptions: ['-m', 'pip'],
+      args: ['install', '-r', requirementsPath]
     };
 
     PythonShell.run(null, options, (err, results) => {
